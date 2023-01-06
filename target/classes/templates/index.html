@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>首页</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/homeIndex.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+<!--首页所有角色都可以访问-->
+<!--导航栏-->
+<nav class="navbar navbar-transparent navbar-expand-lg navbar-light bg-light py-4">
+    <div class="container">
+<!--        使用th:text 实现中英文切换-->
+        <a class="navbar-brand hotel-logo" href="#"><strong th:text="#{index.logo1}">LNXI</strong><span th:text="#{index.logo2}">&nbsp;Hotel</span></a>
+        <!--当窗口变很小时，出现该按钮以显示导航栏-->
+        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main" aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
+            <!--按钮图标-->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse offcanvas-collapse" id="navbar_main">
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+<!--                当前网页缩小后，显示出下拉菜单的标题头-->
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0" th:text="#{index.menu}">菜单</h6>
+<!--                导航项1 首页 介绍我们的酒店-->
+                <li class="nav-item active hotel-nav">
+                    <a class="nav-link" href="#" th:text="#{index.home}">首页</a>
+                </li>
+
+<!--                导航项2 服务-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.service}">服务</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
+                        <a class="dropdown-item hotel-nav" th:text="#{index.room}" th:href="@{/to_roomIndex}">订房</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.food}" href="#">订餐</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.missedThing}" href="#">失物认领</a>
+                    </div>
+                </li>
+
+<!--                导航项3 中英文切换-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.language}">语言</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_2">
+                        <a class="dropdown-item hotel-nav" th:href="@{/(language='zh_CN')}">简体中文</a>
+                        <a class="dropdown-item hotel-nav" th:href="@{/(language='en_US')}">English</a>
+                    </div>
+                </li>
+<!--                导航项4 个人中心，头像显示-->
+                <li class="nav-item hotel-nav">
+                    <a class="nav-link" th:href="@{/to_personalIndex}">
+                        <!--头像-->
+                        <img width="30" height="30" th:src="@{/image/tip.jpg}" class="avatar avatar-sm mr-3">
+                    </a>
+                </li>
+<!--                导航项5 注销退出-->
+                <li class="nav-item active hotel-nav">
+                    <form th:action="@{/myLogout}" method="post">
+                        <input th:type="submit" th:value="#{index.logout}">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="main">
+<!--    导航栏下方的section为占满全宽的区域 用来介绍网站的作用。-->
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen" style="background-image: url('/image/background_index.jpg')">
+        <span class="mask bg-primary" style="opacity: 0.2"></span>
+        <div class="myContent" style="height: 753px">
+            <div class="container d-flex align-items-center no-padding">
+                <div class="col">
+                    <div class="row cols-xs-space align-items-center text-center text-md-left justify-content-center">
+                        <div class="col-7">
+                            <div class="text-center mt-5">
+                                <!--图片这里要改为放logo-->
+                                <img th:src="@{/image/tip.jpg}" style="width: 200px;height: 200px" class="img-fluid animated" data-animation-in="jackInTheBox" data-animation-delay="1000">
+<!--                                讲述酒店的宗旨-->
+                                <h2 class="heading display-4 font-weight-400 text-white mt-5 animated" data-animation-in="fadeInUp" data-animation-delay="2000">
+                                    <span class="font-weight-700" th:text="#{index.caption1}">LNXI</span>&nbsp;<span th:text="#{index.caption2}">Hotel</span>
+                                </h2>
+                                <p class="lead text-lg-center text-white mt-5 lh-180 c-white animated" data-animation-in="fadeInUp" data-animation-delay="2500" th:text="#{index.introduction}">
+                                    我们的酒店旨在为客户提供良好的旅行体验
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

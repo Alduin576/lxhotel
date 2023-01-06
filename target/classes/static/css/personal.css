@@ -1,0 +1,44 @@
+.main{
+    position: relative;
+}
+
+.navbar-transparent{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: transparent !important;
+    border: 0;
+    box-shadow: none;
+}
+
+.hotel-logo{
+    font-size: 30px;
+}
+
+.hotel-nav{
+    font-size:16px;
+}
+
+
+/*当缩小页面时，使首页迎接图片大小随着缩小变化*/
+@media (min-height: 600px) and (min-width: 767px){
+    [data-spotlight="fullscreen"] {
+        height: 100vh;
+    }
+}
+
+.bg-cover{position: relative}
+.bg-size--cover{background-size:cover;background-repeat:no-repeat}
+
+.personContent{
+    position: relative;
+    top: 100px;
+}
+.person-jumbotron{
+    padding: 2rem 2rem;
+}
+
+.myTab{
+    margin-top: 10px;
+}

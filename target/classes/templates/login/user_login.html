@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/userlogin/signin.css}" />
+</head>
+<body class="text-center">
+<form class="form-signin">
+    <h1 th:text="#{login.title}">蓝星酒店欢迎您</h1>
+    <img class="mb-4" th:src="@{/image/tip.jpg}" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">请登录</h1>
+    <input type="text" class="form-control"
+           th:placeholder="#{login.username}" required="" autofocus="" name="username">
+    <input type="password" class="form-control"
+           th:placeholder="#{login.password}" required="" name="password">
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> [[#{login.rememberMe}]]
+        </label>
+    </div>
+    <!--为button设置一个点击事件，使其使用ajax发送请求到后端的checkLogin-->
+    <button class="btn btn-lg btn-primary" type="submit" th:text="#{login.loginButton}">登录</button>
+    <button class="btn btn-lg btn-primary" th:text="#{login.registerButton}">注册</button>
+    <p class="mt-5 mb-3 text-muted">© <span th:text="${currentYear}">2018</span>-<span th:text="${currentYear}+1">2019</span></p>
+    <a class="btn btn-sm" th:href="@{/login/startLogin(language='zh_CN')}">中文</a>
+    <a class="btn btn-sm" th:href="@{/login/startLogin(language='en_US')}">English</a>
+</form>
+</body>
+</html>

@@ -1,0 +1,73 @@
+.bg-cover{position: relative}
+.bg-size--cover{background-size:cover;background-repeat:no-repeat}
+.main{
+    position: relative;
+}
+
+.navbar-transparent{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: transparent !important;
+    border: 0;
+    box-shadow: none;
+}
+
+.hotel-logo{
+    font-size: 30px;
+}
+
+.hotel-nav{
+    font-size:16px;
+}
+
+/*section的遮罩*/
+.mask{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    transition:all 0.3s ease-in-out;
+    -webkit-transition:all 0.3s ease-in-out
+}
+/*当缩小页面时，使首页迎接图片大小随着缩小变化*/
+@media (min-height: 600px) and (min-width: 767px){
+    [data-spotlight="fullscreen"] {
+        height: 100vh;
+    }
+}
+
+/*页面提示*/
+.tip{
+    position: relative;
+    top: 90px;
+}
+/*房间预览图*/
+.previewPicture{
+    position: relative;
+    top: 100px;
+}
+.section1{
+    position: relative;
+}
+
+.section2{
+    position: relative;
+    top: 0px;
+}
+/*功能区*/
+.functionRegion{
+    position: relative;
+    top: 1rem;
+}
+
+.myNav{
+    font-size: 18px;
+}
+
+#myTabContent{
+    position: relative;
+    top: 10px;
+}

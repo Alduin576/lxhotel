@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>开房</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/room.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!--首页所有角色都可以访问-->
+<!--导航栏-->
+<nav class="navbar navbar-transparent navbar-expand-lg navbar-light bg-light py-4">
+    <div class="container">
+        <!--        使用th:text 实现中英文切换-->
+        <a class="navbar-brand hotel-logo" th:href="@{/}"><strong th:text="#{index.logo1}">LNXI</strong><span th:text="#{index.logo2}">&nbsp;Hotel</span></a>
+        <!--当窗口变很小时，出现该按钮以显示导航栏-->
+        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main" aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
+            <!--按钮图标-->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse offcanvas-collapse" id="navbar_main">
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+                <!--                当前网页缩小后，显示出下拉菜单的标题头-->
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0" th:text="#{index.menu}">菜单</h6>
+                <!--                导航项1 首页 介绍我们的酒店-->
+                <li class="nav-item active hotel-nav">
+                    <a class="nav-link" th:href="@{/}" th:text="#{index.home}">首页</a>
+                </li>
+                <!--                导航项2 服务-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" id="navbar_main_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.service}">服务</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
+                        <a class="dropdown-item hotel-nav" th:text="#{index.room}" th:href="@{/to_roomIndex}">订房</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.food}" href="#">订餐</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.missedThing}" href="#">失物认领</a>
+                    </div>
+                </li>
+
+                <!--                导航项3 中英文切换-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.language}">语言</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_2">
+                        <a class="dropdown-item hotel-nav" th:href="@{(language='zh_CN')}">简体中文</a>
+                        <a class="dropdown-item hotel-nav" th:href="@{(language='en_US')}">English</a>
+                    </div>
+                </li>
+                <!--                导航项4 个人中心，头像显示-->
+                <li class="nav-item hotel-nav">
+                    <a class="nav-link" th:href="@{/to_personalIndex}">
+                        <!--头像-->
+                        <img width="30" height="30" th:src="@{/image/tip.jpg}" class="avatar avatar-sm mr-3">
+                    </a>
+                </li>
+                <!--                导航项5 注销退出-->
+                <li class="nav-item active hotel-nav">
+                    <form th:action="@{/myLogout}" method="post">
+                        <input th:type="submit" th:value="#{index.logout}">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="main">
+    <!--酒店客房 主页-->
+    <section class="section1 spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen" style="background-image: url('/image/background_index.jpg')">
+        <!--表单显示区-->
+        <div class="container jumbotron" style="padding: 1rem 1rem;position: relative;top: 85px;">
+            <h1 class="text-center text-primary">开房</h1>
+            <form th:action="@{/roomOrder/doOrder}" method="post">
+                <ul class="list-group list-group-flush">
+                    <!-- 房间号  -->
+                    <!--获取客户选的房间号的表单-->
+                    <li class="list-group-item">
+                        <div class="form-group row">
+                            <label for="roomNumber" class="col-sm-2 col-form-label">房间号</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="number" class="form-control-plaintext" id="roomNumber" th:value="${number}" readonly>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 房价 -->
+                    <li class="list-group-item">
+                        <div class="form-group row">
+                            <label for="roomPrice" class="col-sm-2 col-form-label">房价</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="price" class="form-control-plaintext" id="roomPrice" th:value="${price}" readonly>
+                            </div>
+                        </div>
+                    </li>
+                    <p class="text-warning" th:if="${hasCustomerInfo}">由于您填写了个人信息，已为您自动填写信息</p>
+                    <p class="text-warning" th:if="${not hasCustomerInfo}">由于您未填写个人信息，需自行填写信息</p>
+                    <!-- 姓名 -->
+                    <li th:if="${hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="name1" class="col-sm-2 col-form-label">姓名</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="name" class="form-control-plaintext" id="name1" th:value="${CustomerInfo.name}">
+                            </div>
+                        </div>
+                    </li>
+                    <!--姓名-->
+                    <li th:if="${not hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="name2" class="col-sm-2 col-form-label">姓名</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="name" class="form-control-plaintext" id="name2" placeholder="请输入姓名...">
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 电话号码 -->
+                    <li th:if="${hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="telephone1" class="col-sm-2 col-form-label">电话号码</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="telephone" class="form-control-plaintext" id="telephone1" th:value="${CustomerInfo.telephone}">
+                            </div>
+                        </div>
+                    </li>
+                    <li th:if="${not hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="telephone2" class="col-sm-2 col-form-label">电话号码</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="telephone" class="form-control-plaintext" id="telephone2" placeholder="请输入电话号码...">
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 身份证号码
+                     如果该用户已填写了(客户)身份证信息 则不显示-->
+                    <li th:if="${hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="idCode1" class="col-sm-2 col-form-label">身份证号码</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="idCode" class="form-control-plaintext" id="idCode1" th:value="${CustomerInfo.idCode}">
+                            </div>
+                        </div>
+                    </li>
+                    <li th:if="not ${hasCustomerInfo}" class="list-group-item">
+                        <div class="form-group row">
+                            <label for="idCode2" class="col-sm-2 col-form-label">身份证号码</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="idCode" class="form-control-plaintext" id="idCode2" placeholder="请输入身份证号码...">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">订单类型</label>
+                            <div class="col-sm-5">
+                                <!--直接下单单选按钮  点击后出现扫描二维码来支付（模拟）-->
+                                <span class="badge badge-success">直接下单</span>
+                                <!--PO表示下单-->
+                                <input type="radio" name="type" value="PO">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <button type="submit" class="btn-success">创建订单</button>
+                        <button type="reset" class="btn-danger">重置</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+
+    </section>
+
+
+
+
+
+</body>
+</html>

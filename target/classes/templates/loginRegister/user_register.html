@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/logReg/signin.css}" />
+</head>
+<body class="text-center">
+<form class="form-signin" th:action="@{/reg/doReg}" method="post">
+    <h1 th:text="#{login.title}">蓝星酒店欢迎您</h1>
+    <img class="mb-4" th:src="@{/image/tip.jpg}" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.regTip}">请注册</h1>
+    <h4 class="text-center text-danger" th:if="${isDuplicated}">用户名重复</h4>
+    <input type="text" class="form-control"
+           th:placeholder="#{login.username}" required="" autofocus="" name="username">
+    <input type="password" class="form-control"
+           th:placeholder="#{login.password}" required="" name="password">
+
+    <button class="btn btn-lg btn-primary" type="submit" th:text="#{login.confirm}">确认</button>
+    <button class="btn btn-lg btn-primary" type="reset" th:text="#{login.reset}">重置</button>
+    <p class="mt-5 mb-3 text-muted">© <span th:text="${currentYear}">2018</span>-<span th:text="${currentYear}+1">2019</span></p>
+    <a class="btn btn-sm" th:href="@{/startLogin}">返回登录</a>
+    <a class="btn btn-sm" th:href="@{/reg/toReg(language='zh_CN')}">中文</a>
+    <a class="btn btn-sm" th:href="@{/reg/toReg(language='en_US')}">English</a>
+</form>
+</body>
+</html>

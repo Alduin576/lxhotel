@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>房间预订</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/room.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!--首页所有角色都可以访问-->
+<!--导航栏-->
+<nav class="navbar navbar-transparent navbar-expand-lg navbar-light bg-light py-4">
+    <div class="container">
+        <!--        使用th:text 实现中英文切换-->
+        <a class="navbar-brand hotel-logo" href="#"><strong th:text="#{index.logo1}">LNXI</strong><span th:text="#{index.logo2}">&nbsp;Hotel</span></a>
+        <!--当窗口变很小时，出现该按钮以显示导航栏-->
+        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main" aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
+            <!--按钮图标-->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse offcanvas-collapse" id="navbar_main">
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+                <!--                当前网页缩小后，显示出下拉菜单的标题头-->
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0" th:text="#{index.menu}">菜单</h6>
+                <!--                导航项1 首页 介绍我们的酒店-->
+                <li class="nav-item active hotel-nav">
+                    <a class="nav-link" href="#" th:text="#{index.home}">首页</a>
+                </li>
+                <!--                导航项2 服务-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.service}">服务</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
+                        <a class="dropdown-item hotel-nav" th:text="#{index.room}" th:href="@{/to_roomIndex}">订房</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.food}" href="#">订餐</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.missedThing}" href="#">失物认领</a>
+                    </div>
+                </li>
+
+                <!--                导航项3 中英文切换-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.language}">语言</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_2">
+                        <a class="dropdown-item hotel-nav" th:href="@{/to_roomIndex(language='zh_CN')}">简体中文</a>
+                        <a class="dropdown-item hotel-nav" th:href="@{/to_roomIndex(language='en_US')}">English</a>
+                    </div>
+                </li>
+                <!--                导航项4 个人中心，头像显示-->
+                <li class="nav-item hotel-nav">
+                    <a class="nav-link" th:href="@{/to_personalIndex}">
+                        <!--头像-->
+                        <img width="30" height="30" th:src="@{/image/tip.jpg}" class="avatar avatar-sm mr-3">
+                    </a>
+                </li>
+                <!--                导航项5 注销退出-->
+                <li class="nav-item active hotel-nav">
+                    <form th:action="@{/myLogout}" method="post">
+                        <input th:type="submit" th:value="#{index.logout}">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="main">
+    <!--酒店客房 主页-->
+    <section class="section1 spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen" style="background-image: url('/image/background_index.jpg')">
+        <!--     提示   -->
+        <div class="tip">
+            <div class="container">
+                <div class="jumbotron">
+                    <h1>订房服务</h1>
+                    <p>下方有我们酒店房间样式图，以及酒店周边风景</p>
+                    <!--                    快速跳到订房区域-->
+                    <a class="btn btn-outline-primary" href="#roomFunction">马上订房</a>
+                    <h3 th:if="${not hasCustomerInfo}" class="text-center text-warning">你还未填写用户信息</h3>
+                </div>
+            </div>
+        </div>
+        <!--      房间预览图 使用网格布局-->
+        <div class="previewPicture">
+            <div class="container">
+                <h2 class="text-center">房间预览</h2>
+                <div class="row">
+                    <div class="col-4">
+                        <img th:src="@{/image/hotel_room/hotel_room_1.jpg}" width="360px" height="300px"/>
+                    </div>
+                    <div class="col-4">
+                        <img th:src="@{/image/hotel_room/hotel_room_2.jpg}" width="360px" height="300px"/>
+                    </div>
+                    <div class="col-4">
+                        <img th:src="@{/image/hotel_room/hotel_room_2.jpg}" width="360px" height="300px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--    使用网格布局来实现各个房间图片的布局-->
+    <section class="section2 spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen" style="background-image: url('/image/background_index.jpg')">
+        <!-- 功能区-->
+        <div class="functionRegion" id="roomFunction">
+            <div class="container">
+                <!--                选项区-->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light myNav">
+                    <a class="navbar-brand" href="#">LNXI&nbsp;Hotel</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <ul class="nav navbar-nav nav-tabs" id="myTab" role="tablist">
+                        <!--                        查看房间-->
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#roomShow" data-toggle="tab" role="tab" id="room-tab" aria-controls="roomShow" aria-selected="true">查看房间<span class="sr-only">(current)</span></a>
+                        </li>
+                        <!--                        预订房间-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#roomPreserve" data-toggle="tab" role="tab" id="preserve-tab" aria-controls="roomPreserve" aria-selected="false">创建订单</a>
+                        </li>
+                        <!--                        查看订单-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#orderInfo" data-toggle="tab" role="tab" id="order-tab" aria-controls="orderInfo" aria-selected="false">订单信息</a>
+                        </li>
+
+                    </ul>
+                </nav>
+                <!--                显示区-->
+                <div class="container jumbotron" style="padding: 1rem 1rem">
+                    <div class="tab-content" id="myTabContent">
+                        <!--                    查看房间-->
+                        <div class="tab-pane fade show active" id="roomShow" role="tabpanel" aria-labelledby="room-tab">
+                            <!--                            使用bootstrap的卡片将所有的房间展示出来-->
+                            <div class="row">
+                                <div th:each="room:${roomList}" class="col-md-3">
+                                    <div class="card mb-4">
+                                        <img th:src="@{${room.url}}" width="200" height="200" class="card-img-top">
+                                        <div class="card-body">
+                                            <p class="card-text">
+                                                房间号:<strong th:text="${room.number}">201</strong>&nbsp;&nbsp;
+                                                房间类型:<span th:text="${room.type}">单人房</span>&nbsp;&nbsp;<br>
+                                                房价:<em th:text="${room.price}">100</em><span>￥</span>
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+                                                    <a th:if="${!room.isOccupied()}" class="btn btn-outline-success" th:href="@{/to_createRoom/{id}(id=${room.id})}">开房</a>
+                                                    <a th:if="${!room.isOccupied()}" class="btn btn-outline-primary" th:href="@{/to_preserveRoom/{id}(id=${room.id})}">预订</a>
+                                                    <a th:if="${room.isOccupied()}" class="btn btn-outline-success disabled" th:href="@{/to_createRoom/{id}(id=${room.id})}">开房</a>
+                                                    <a th:if="${room.isOccupied()}" class="btn btn-outline-primary disabled" th:href="@{/to_preserveRoom/{id}(id=${room.id})}">预订</a>
+                                                </div>
+                                                <span th:if="${!room.isOccupied()}" th:text="${room.status}" class="badge badge-info">空闲</span>
+                                                <span th:if="${room.isOccupied()}" th:text="${room.status}" class="badge badge-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--订房-->
+                        <div class="tab-pane fade" id="roomPreserve" role="tabpanel" aria-labelledby="preserve-tab">
+                            <!--                            这将是一个订单的创建，需要创建新的类，订单类.其中订单类的属性有 id name客户的姓名，number房间号,price房间价格,-->
+                            <form th:action="@{/roomOrder/doOrder}" method="post">
+                                <ul class="list-group list-group-flush">
+                                    <!-- 房间号  届时准备用下拉列表选取 -->
+                                    <!--获取客户选的房间号的表单-->
+                                    <li class="list-group-item">
+                                        <div class="form-group row">
+                                            <label for="roomNumber" class="col-sm-2 col-form-label">房间号</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="number" class="form-control-plaintext" id="roomNumber" placeholder="请输入房间号...">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- 房价  届时使用下拉列表 -->
+                                    <li class="list-group-item">
+                                        <div class="form-group row">
+                                            <label for="roomPrice" class="col-sm-2 col-form-label">房价</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="price" class="form-control-plaintext" id="roomPrice" placeholder="请输入房间价格...">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- 姓名 -->
+                                    <li class="list-group-item">
+                                        <div class="form-group row">
+                                            <label for="name" class="col-sm-2 col-form-label">姓名</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="name" class="form-control-plaintext" id="name" placeholder="请输入姓名...">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- 电话号码 -->
+                                    <li class="list-group-item">
+                                        <div class="form-group row">
+                                            <label for="telephone" class="col-sm-2 col-form-label">电话号码</label>
+                                            <div class="col-sm-5">
+                                                <input type="text" name="telephone" class="form-control-plaintext" id="telephone" placeholder="请输入电话号码...">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- 订单类型 -->
+                                    <li class="list-group-item">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">订单类型</label>
+                                            <div class="col-sm-5">
+                                                <!-- 预订单选按钮-->
+                                                <!-- BO表示预订-->
+                                                <span class="badge badge-warning">预订</span>
+                                                <input type="radio" name="type" value="0">
+                                                <!--直接下单单选按钮  点击后出现扫描二维码来支付（模拟）-->
+                                                <!-- PO表示 下单-->
+                                                <span class="badge badge-success">直接下单</span>
+                                                <input type="radio" name="type" value="1">
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item">
+                                        <button type="submit" class="btn-success">创建订单</button>
+                                        <button type="reset" class="btn-danger">重置</button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                        <!--                    查看订单信息-->
+                        <div class="tab-pane fade" id="orderInfo" role="tabpanel" aria-labelledby="order-tab">
+                            <div class="accordion" id="accordionOrder">
+                                <div class="card">
+                                    <div class="card-header" id="heading_completed">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#completed" aria-expanded="true" aria-controls="completed">
+                                                已完成
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="completed" class="collapse show" aria-labelledby="heading_completed" data-parent="#accordionOrder">
+                                        <div class="card-body">
+                                            <ul class="list-group" th:each="roomOrder:${roomOrderList}" th:if="${roomOrder.isCompleted()}">
+                                                <li th:if="${roomOrder.status}" class="list-group-item list-group-item-success d-flex justify-content-between">
+                                                    <div id="info-activated-completed">
+                                                        id:<span th:text="${roomOrder.id}"></span>
+                                                        房号:<span th:text="${roomOrder.number}"></span>
+                                                        房价:<span th:text="${roomOrder.price}"></span>
+                                                        <span th:if="${roomOrder.status}">订单已完成</span>
+                                                    </div>
+                                                    <div id="option-activated-completed">
+                                                        <span th:true="${roomOrder.isCompleted()}"><a href="#" class="btn btn-outline-success">评价</a></span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="heading_uncompleted">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#uncompleted" aria-expanded="false" aria-controls="uncompleted">
+                                                未完成
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="uncompleted" class="collapse" aria-labelledby="heading_uncompleted" data-parent="#accordionOrder">
+                                        <div class="card-body">
+                                            <ul class="list-group" th:each="roomOrder:${roomOrderList}" th:unless="${roomOrder.isCompleted()}">
+                                                <!--已激活 下单完成-->
+                                                <li th:if="${roomOrder.status}" class="list-group-item list-group-item-success d-flex justify-content-between">
+                                                    <div id="info-activated">
+                                                        id:<span th:text="${roomOrder.id}"></span>
+                                                        房号:<span th:text="${roomOrder.number}"></span>
+                                                        房价:<span th:text="${roomOrder.price}"></span>
+                                                        <span th:if="${roomOrder.status}">订单状态:激活,已下单</span>
+                                                    </div>
+                                                    <div id="option-activated">
+                                                        <span th:unless="${roomOrder.isCompleted()}"><a th:href="@{/roomOrder/exitRoom/{id}(id=${roomOrder.id})}" class="btn btn-outline-danger">退房</a></span>
+                                                    </div>
+                                                </li>
+                                                <!--未激活 预约的订单-->
+                                                <li th:unless="${roomOrder.status}" class="list-group-item list-group-item-warning d-flex justify-content-between">
+                                                    <div id="info-unactivated">
+                                                        id:<span th:text="${roomOrder.id}"></span>
+                                                        房号:<span th:text="${roomOrder.number}"></span>
+                                                        房价:<span th:text="${roomOrder.price}"></span>
+                                                        <span th:unless="${roomOrder.status}">订单状态:未激活,未付款</span>
+                                                    </div>
+                                                    <div id="option-unactivated">
+                                                        <span th:unless="${roomOrder.isCanceled()}"><a th:href="@{/roomOrder/cancelOrder/{id}(id=${roomOrder.id})}" class="btn btn-outline-danger">取消</a></span>
+                                                        <span th:unless="${roomOrder.isCanceled()}"><a th:href="@{/roomOrder/payOrder/{id}(id=${roomOrder.id})}" class="btn btn-outline-info">付款</a></span>
+                                                        <span th:if="${roomOrder.isCanceled()}" class="badge badge-info">订单已取消</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

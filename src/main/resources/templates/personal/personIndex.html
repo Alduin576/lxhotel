@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>首页</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/personal.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+
+<!--首页所有角色都可以访问-->
+<!--导航栏-->
+<nav class="navbar navbar-transparent navbar-expand-lg navbar-light bg-light py-4">
+    <div class="container">
+        <!--        使用th:text 实现中英文切换-->
+        <a class="navbar-brand hotel-logo" href="#"><strong th:text="#{index.logo1}">LNXI</strong><span th:text="#{index.logo2}">&nbsp;Hotel</span></a>
+        <!--当窗口变很小时，出现该按钮以显示导航栏-->
+        <button class="navbar-toggler" type="button" data-action="offcanvas-open" data-target="#navbar_main" aria-controls="navbar_main" aria-expanded="false" aria-label="Toggle navigation">
+            <!--按钮图标-->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse offcanvas-collapse" id="navbar_main">
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+                <!--                当前网页缩小后，显示出下拉菜单的标题头-->
+                <h6 class="dropdown-header font-weight-600 d-lg-none px-0" th:text="#{index.menu}">菜单</h6>
+                <!--                导航项1 首页 介绍我们的酒店-->
+                <li class="nav-item active hotel-nav">
+                    <a class="nav-link" href="#" th:text="#{index.home}">首页</a>
+                </li>
+
+                <!--                导航项2 服务-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.service}">服务</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_1">
+                        <a class="dropdown-item hotel-nav" th:text="#{index.room}" th:href="@{/to_roomIndex}">订房</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.food}" href="#">订餐</a>
+                        <a class="dropdown-item hotel-nav" th:text="#{index.missedThing}" href="#">失物认领</a>
+                    </div>
+                </li>
+
+                <!--                导航项3 中英文切换-->
+                <li class="nav-item dropdown hotel-nav">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbar_main_dropdown_2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{index.language}">语言</a>
+                    <div class="dropdown-menu" aria-labelledby="navbar_1_dropdown_2">
+                        <a class="dropdown-item hotel-nav" th:href="@{/(language='zh_CN')}">简体中文</a>
+                        <a class="dropdown-item hotel-nav" th:href="@{/(language='en_US')}">English</a>
+                    </div>
+                </li>
+                <!--                导航项4 个人中心，头像显示-->
+                <li class="nav-item hotel-nav">
+                    <a class="nav-link">
+                        <!--头像-->
+                        <img width="30" height="30" th:src="@{/image/tip.jpg}" class="avatar avatar-sm mr-3">
+                    </a>
+                </li>
+                <!--如果用户名是 admin则 显示-->
+                <li th:if="${idAdmin}" class="nav-item hotel-nav">
+                    <a class="nav-link btn btn-outline-info" th:href="@{/admin/toAdmin_index}">进入管理</a>
+                </li>
+                <!--                导航项5 注销退出-->
+                <li class="nav-item active hotel-nav">
+                    <a class="nav-link">
+                        <form th:action="@{/myLogout}" method="post">
+                            <input th:type="submit" th:value="#{index.logout}">
+                        </form>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="main">
+    <!--个人主页-->
+    <section class="spotlight parallax bg-cover bg-size--cover" data-spotlight="fullscreen" style="background-image: url('/image/background_index.jpg')">
+        <div class="container personContent">
+            <div class="jumbotron person-jumbotron">
+                <div class="row">
+                    <div class="col-3">
+                        <img width="60" height="60" th:src="@{/image/tip.jpg}" class="rounded-circle float-left" alt="头像">
+                        &nbsp;<h3 th:text="${username}"></h3>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h2>个人主页</h2>
+                    </div>
+                </div>
+                <nav class="nav nav-tabs nav-justified myTab" id="myTab" role="tablist">
+                    <a id="seeInfo" data-toggle="tab" href="#Info" role="tab" aria-controls="Info" aria-selected="true" class="nav-item nav-link active">个人信息</a>
+                    <a id="updateInfo" data-toggle="tab" href="#UpdateInfo-tabpanel" role="tab" aria-controls="UpdateInfo-tabpanel" aria-selected="false" class="nav-item nav-link">修改信息</a>
+                    <!-- 如果用户已经填写了(有)客户信息，则不显示，反之则显示 -->
+                    <a th:if="${not hasCustomer}" id="fillInfo" data-toggle="tab" href="#fill" role="tab" aria-controls="fill" aria-selected="false" class="nav-item nav-link">填写信息</a>
+                </nav>
+                <div class="tab-content" id="myTabContent">
+<!--                    展示信息-->
+                    <div class="tab-pane fade show active" id="Info" role="tabpanel" aria-labelledby="seeInfo">
+                        <ul th:if="${hasCustomer}" class="list-group list-group-flush">
+                            <li class="list-group-item">姓名:<strong th:text="${customer.name}">wq</strong></li>
+                            <li class="list-group-item">性别:<strong th:text="${customer.sex}">male</strong></li>
+                            <li class="list-group-item">年龄:<strong th:text="${customer.age}">20</strong></li>
+                            <li class="list-group-item">籍贯:<strong th:text="${customer.origin}">hunan hengyang</strong></li>
+                            <li class="list-group-item">电话号码:<strong th:text="${customer.telephone}">13342541239</strong></li>
+                            <li class="list-group-item">身份证号:<strong th:text="${customer.idCode}">430***2001********</strong></li>
+                            <li class="list-group-item">电子邮箱:<strong th:text="${customer.email}">1379121780@qq.com</strong></li>
+                        </ul>
+                        <h1 class="text-warning text-center" th:unless="${hasCustomer}">未查询你的客户信息，可能是没有填写</h1>
+                    </div>
+
+<!--                    修改信息 修改用户 和修改客户-->
+                    <div class="tab-pane fade" id="UpdateInfo-tabpanel" role="tabpanel" aria-labelledby="updateInfo">
+                        <form th:action="@{/customer/doUpdate}" method="post">
+                        <ul class="list-group list-group-flush">
+                            <!-- 用户名 -->
+                            <li class="list-group-item">
+                                <div class="form-group row">
+                                    <label for="username" class="col-sm-2 col-form-label">用户名</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" name="username" class="form-control-plaintext" id="username" placeholder="请输入用户名...">
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- 密码 -->
+                            <li class="list-group-item">
+                                <div class="form-group row">
+                                    <label for="password" class="col-sm-2 col-form-label">密码</label>
+                                    <div class="col-sm-5">
+                                        <input type="password" name="password" class="form-control-plaintext" id="password" placeholder="请输入密码...">
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- 电话号码 -->
+                            <li class="list-group-item">
+                                <div class="form-group row">
+                                    <label for="telephone" class="col-sm-2 col-form-label">电话号码</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" name="telephone" class="form-control-plaintext" id="telephone" placeholder="请输入电话号码...">
+                                    </div>
+                                </div>
+                            </li>
+                                <!-- 电子邮箱 -->
+                            <li class="list-group-item">
+                                <div class="form-group row">
+                                    <label for="email" class="col-sm-2 col-form-label">电子邮箱</label>
+                                    <div class="col-sm-5">
+                                        <input type="email" name="email" class="form-control-plaintext" id="email" placeholder="请输入电子邮箱...">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <button type="submit" class="btn-success">提交</button>
+                                <button type="reset" class="btn-danger">重置</button>
+                            </li>
+                        </ul>
+                        </form>
+                    </div>
+<!--                    填写客户信息-->
+                     <div class="tab-pane fade" id="fill" role="tabpanel" aria-labelledby="fillInfo">
+                         <form th:action="@{/customer/doFill}" method="post">
+                         <ul class="list-group list-group-flush">
+                                 <!-- 姓名 -->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="name" class="col-sm-2 col-form-label">姓名</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" class="form-control-plaintext" name="name" id="name" placeholder="请输入名字...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <!-- 性别 -->
+<!--                                 届时使用单选框。-->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="sex" class="col-sm-2 col-form-label">性别</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" class="form-control-plaintext" name="sex" id="sex" placeholder="请输入性别...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <!-- 年龄 -->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="age" class="col-sm-2 col-form-label">年龄</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" class="form-control-plaintext" name="age" id="age" placeholder="请输入年龄...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <!-- 籍贯 -->
+<!--                                 届时使用下拉列表-->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="origin" class="col-sm-2 col-form-label">籍贯</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" class="form-control-plaintext" name="origin" id="origin" placeholder="请输入籍贯...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <!-- 电话号码 -->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="fill_telephone" class="col-sm-2 col-form-label">电话号码</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" name="telephone" class="form-control-plaintext" id="fill_telephone" placeholder="请输入电话号码...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <!-- 身份证 -->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="fill_idcard" class="col-sm-2 col-form-label">身份证</label>
+                                         <div class="col-sm-5">
+                                             <input type="text" class="form-control-plaintext" name="idCode" id="fill_idcard" placeholder="请输入身份证号...">
+                                         </div>
+                                     </div>
+                                 </li>
+<!--                                 电子邮箱-->
+                                 <li class="list-group-item">
+                                     <div class="form-group row">
+                                         <label for="fill_email" class="col-sm-2 col-form-label">电子邮箱</label>
+                                         <div class="col-sm-5">
+                                             <input type="email" class="form-control-plaintext" name="email" id="fill_email" placeholder="请输入电子邮箱...">
+                                         </div>
+                                     </div>
+                                 </li>
+                                 <li class="list-group-item">
+                                     <button type="submit" class="btn-success">提交</button>
+                                     <button type="reset" class="btn-danger">重置</button>
+                                 </li>
+                         </ul>
+                         </form>
+                     </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+<!--&lt;!&ndash;    如果当前登录的用户是管理员，则显示下方的内容&ndash;&gt;-->
+<!--    <section th:if="${idAdmin}" class="spotlight parallax bg-cover bg-size&#45;&#45;cover" data-spotlight="fullscreen">-->
+<!--        <h1>如果是管理员则显示</h1>-->
+<!--    </section>-->
+
+
+</main>
+</body>
+</html>
